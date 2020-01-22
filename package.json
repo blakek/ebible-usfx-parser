@@ -21,6 +21,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "tsc --noEmit && eslint 'src/**/*.{js,ts,tsx}' --fix",
+    "setup": "bash setup.sh",
     "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
   },
   "dependencies": {

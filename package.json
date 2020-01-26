@@ -4,10 +4,26 @@
   "main": "dist/index.ts",
   "author": "Blake Knight <oss.ideas@gmail.com> (https://blakek.me/)",
   "license": "MIT",
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "files": [
+      "src/**/*.test.ts"
+    ],
+    "ignoredByWatcher": [
+      "!src/**"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "timeout": "2m"
+  },
   "devDependencies": {
     "@types/node": "^13.1.8",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
+    "ava": "^3.0.0",
     "eslint": "^6.8.0",
     "eslint-config-gsandf": "^1.0.1",
     "eslint-config-prettier": "^6.9.0",
@@ -22,7 +38,8 @@
     "build": "tsc",
     "lint": "tsc --noEmit && eslint 'src/**/*.{js,ts,tsx}' --fix",
     "setup": "bash setup.sh",
-    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
+    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "test": "ava"
   },
   "dependencies": {
     "dot-prop": "^5.2.0",

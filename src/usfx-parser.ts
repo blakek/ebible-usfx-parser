@@ -14,14 +14,14 @@ export function parseFile(inputFile: fs.PathLike): Promise<Node> {
       updateState({
         type: tag.name,
         attributes: tag.attributes,
-        isBeginning: true
+        isTagOpen: true
       });
     });
 
     xmlParser.on('closetag', tagName => {
       if (xmlParser._parser.tag.isSelfClosing) return;
 
-      updateState({ type: tagName, isBeginning: false });
+      updateState({ type: tagName, isTagOpen: false });
     });
 
     xmlParser.on('text', text => {

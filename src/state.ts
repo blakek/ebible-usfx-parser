@@ -24,9 +24,9 @@ export const state: State = {
   unknownTags: new Set()
 };
 
-type action = {
+type Action = {
   type: string;
-  isBeginning?: boolean;
+  isTagOpen?: boolean;
   attributes?: { id?: string };
   value?: string;
 };
@@ -43,8 +43,8 @@ function incrementPointer(): void {
 const whitespaceRegExp = /^\s+$/;
 const isWhitespace = (value: string): boolean => whitespaceRegExp.test(value);
 
-export function updateState(tag: action): void {
-  switch (tag.type) {
+export function updateState(action: Action): void {
+  switch (action.type) {
     case 'add':
     case 'book':
     case 'd':
@@ -53,16 +53,16 @@ export function updateState(tag: action): void {
     case 'v':
     case 'w':
     case 'wj':
-      if (tag.isBeginning) {
+      if (action.isTagOpen) {
         addChildToState({
-          ...nodes[tag.type],
-          ...(tag.attributes && { attributes: tag.attributes }),
+          ...nodes[action.type],
+          ...(action.attributes && { attributes: action.attributes }),
           children: []
         });
         state.path.push('children', '0');
       } else {
         // HACK: clean up path since chapters don't have an ending tag.
-        if (tag.type === 'book') {
+        if (action.type === 'book') {
           state.path.splice(2);
           incrementPointer();
         } else {
@@ -79,21 +79,21 @@ export function updateState(tag: action): void {
 
     case 'c':
       // HACK: clean up path since chapters don't have an ending tag.
-      if (tag.attributes.id !== '1') {
+      if (action.attributes.id !== '1') {
         state.path.splice(state.path.length - 2);
         incrementPointer();
       }
 
       addChildToState({
-        ...nodes[tag.type],
-        ...(tag.attributes && { attributes: tag.attributes }),
+        ...nodes[action.type],
+        ...(action.attributes && { attributes: action.attributes }),
         children: []
       });
       state.path.push('children', '0');
       break;
 
     case 'languagecode':
-      if (tag.isBeginning) {
+      if (action.isTagOpen) {
         state.textAction = TextActions.SetLanguageCode;
       } else {
         state.textAction = TextActions.CreateNode;
@@ -102,18 +102,21 @@ export function updateState(tag: action): void {
 
     case 'text':
       // Handle when text should be ignored
-      if (state.textAction === TextActions.Ignore || isWhitespace(tag.value)) {
+      if (
+        state.textAction === TextActions.Ignore ||
+        isWhitespace(action.value)
+      ) {
         break;
       }
 
       // Handle when text should set the language code
       if (state.textAction === TextActions.SetLanguageCode) {
-        set(state.syntaxTree, 'attributes.languageCode', tag.value);
+        set(state.syntaxTree, 'attributes.languageCode', action.value);
         break;
       }
 
       // Create a new text node
-      addChildToState({ ...nodes.text, value: tag.value });
+      addChildToState({ ...nodes.text, value: action.value });
       incrementPointer();
       break;
 
@@ -136,6 +139,6 @@ export function updateState(tag: action): void {
       break;
 
     default:
-      state.unknownTags.add(tag.type);
+      state.unknownTags.add(action.type);
   }
 }

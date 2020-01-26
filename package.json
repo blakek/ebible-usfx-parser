@@ -20,7 +20,6 @@
     "timeout": "2m"
   },
   "devDependencies": {
-    "@types/node": "^13.1.8",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "ava": "^3.0.0",
@@ -42,6 +41,7 @@
     "test": "ava"
   },
   "dependencies": {
+    "@types/node": "^13.1.8",
     "@types/unist": "^2.0.3",
     "dot-prop": "^5.2.0",
     "sax": "^1.2.4",

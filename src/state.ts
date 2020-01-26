@@ -1,6 +1,5 @@
 import { set } from 'dot-prop';
 import { Node } from 'unist';
-import { selectAll } from 'unist-util-select';
 import { inspect } from 'util';
 
 export interface TagNode extends Node {
@@ -91,20 +90,6 @@ export const nodes: { [key: string]: TagNode } = {
   w: { type: 'element', name: 'w' },
   wj: { type: 'element', name: 'wj' }
 };
-
-let timesCalled = 0;
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const defaultWhen = (_: number): boolean => true;
-
-function debug(
-  args: object,
-  { depth = 5, limit = 3, when = defaultWhen }
-): void {
-  if (timesCalled++ < limit && when(timesCalled)) {
-    console.log(inspect(args, false, depth, true));
-  }
-}
 
 type action = {
   type: string;

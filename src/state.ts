@@ -1,7 +1,9 @@
 import { set } from 'dot-prop';
+import { Node } from 'unist';
+import { selectAll } from 'unist-util-select';
 import { inspect } from 'util';
 
-export interface TagNode {
+export interface TagNode extends Node {
   type: string;
   attributes?: object;
   children?: TagNode[];
@@ -59,9 +61,10 @@ export function dumpState(): string {
   return JSON.stringify(output, null, 2);
 }
 
-export const isNodeOfType = (expectedNode: TagNode) => (
-  node: TagNode
-): boolean => node.name === expectedNode.name;
+export const filterNodes = (
+  rootNode: TagNode,
+  filterNode: TagNode
+): TagNode[] => selectAll(`[name=${filterNode.name}]`, rootNode);
 
 export const nodes: { [key: string]: TagNode } = {
   add: { type: 'element', name: 'add' },

@@ -1,23 +1,17 @@
 import test from 'ava';
 import { bookVerseCount } from './book-meta';
-import { isNodeOfType, nodes, State, TagNode } from './state';
+import { filterNodes, nodes, State, TagNode } from './state';
 import { parseFile } from './usfx-parser';
 
 let output: State;
 
-function books(): TagNode[] {
-  return output.syntaxTree.children.filter(isNodeOfType(nodes.book));
-}
+const books = (): TagNode[] => filterNodes(output.syntaxTree, nodes.book);
 
-function chaptersForBook(book: TagNode): TagNode[] {
-  return book.children.filter(isNodeOfType(nodes.c));
-}
+const chaptersForBook = (book: TagNode): TagNode[] =>
+  filterNodes(book, nodes.c);
 
-// function versesForChapter(chapter: TagNode): TagNode[] {
-//   // Left off - need to walk tree and find nodes.
-//   // Verse nodes may be nested within other nodes (e.g. `p`)
-//   return chapter.children.filter(isNodeOfType(nodes.v));
-// }
+const versesForChapter = (chapter: TagNode): TagNode[] =>
+  filterNodes(chapter, nodes.v);
 
 // The output file is large and takes a while to load, so it's just created once
 // for the tests.
@@ -47,22 +41,17 @@ test('has the correct number of chapters per book', t => {
   });
 });
 
-// test('has the correct number of verses per chapter', t => {
-//   books().forEach((book, bookIndex) => {
-//     chaptersForBook(book).forEach((chapter, chapterIndex) => {
-//       const expectedVerseCount = bookVerseCount[bookIndex][1][chapterIndex];
-//       const actualVerseCount = versesForChapter(chapter).length;
+test('has the correct number of verses per chapter', t => {
+  books().forEach((book, bookIndex) => {
+    chaptersForBook(book).forEach((chapter, chapterIndex) => {
+      const expectedVerseCount = bookVerseCount[bookIndex][1][chapterIndex];
+      const actualVerseCount = versesForChapter(chapter).length;
 
-//       t.log({ children: chapter.children });
-
-//       if (actualVerseCount !== expectedVerseCount)
-//         throw Error(`${actualVerseCount} !== ${expectedVerseCount}`);
-
-//       t.is(
-//         actualVerseCount,
-//         expectedVerseCount,
-//         `Failed on book ${bookIndex}, chapter ${chapterIndex}`
-//       );
-//     });
-//   });
-// });
+      t.is(
+        actualVerseCount,
+        expectedVerseCount,
+        `Differs for book ${bookIndex}, chapter ${chapterIndex}`
+      );
+    });
+  });
+});

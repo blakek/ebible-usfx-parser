@@ -42,7 +42,9 @@
     "test": "ava"
   },
   "dependencies": {
+    "@types/unist": "^2.0.3",
     "dot-prop": "^5.2.0",
-    "sax": "^1.2.4"
+    "sax": "^1.2.4",
+    "unist-util-select": "^3.0.0"
   }
 }

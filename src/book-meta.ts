@@ -1071,7 +1071,7 @@ export const bookVerseCount: BookChapter[] = [
       21,
       15,
       27,
-      2
+      21
     ]
   ]
 ];

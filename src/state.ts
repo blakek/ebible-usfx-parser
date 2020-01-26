@@ -1,7 +1,7 @@
 import { set } from 'dot-prop';
 import { inspect } from 'util';
 
-interface TagNode {
+export interface TagNode {
   type: string;
   attributes?: object;
   children?: TagNode[];
@@ -34,11 +34,11 @@ export const knownTags = [
   'wj'
 ];
 
-type State = {
+export interface State {
   path: string[];
   syntaxTree: TagNode;
   unknownTags: Set<string>;
-};
+}
 
 export const state: State = {
   path: ['children', '0'],
@@ -58,6 +58,10 @@ export function dumpState(): string {
 
   return JSON.stringify(output, null, 2);
 }
+
+export const isNodeOfType = (expectedNode: TagNode) => (
+  node: TagNode
+): boolean => node.name === expectedNode.name;
 
 export const nodes: { [key: string]: TagNode } = {
   add: { type: 'element', name: 'add' },

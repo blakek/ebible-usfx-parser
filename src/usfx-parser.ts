@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import * as sax from 'sax';
-import { state, State, updateState } from './state';
+import { Node } from './nodes';
+import { state, updateState } from './state';
 
-export function parseFile(inputFile: fs.PathLike): Promise<State> {
+export function parseFile(inputFile: fs.PathLike): Promise<Node> {
   return new Promise((resolve, reject) => {
     const input = fs.createReadStream(inputFile);
     const xmlParser = sax.createStream(false, { lowercase: true });
@@ -28,7 +29,7 @@ export function parseFile(inputFile: fs.PathLike): Promise<State> {
     });
 
     xmlParser.on('end', () => {
-      resolve(state);
+      resolve(state.syntaxTree);
     });
 
     input.pipe(xmlParser);

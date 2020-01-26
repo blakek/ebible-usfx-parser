@@ -1,16 +1,15 @@
 import test from 'ava';
 import { bookVerseCount } from './book-meta';
-import { filterNodes, nodes, State, TagNode } from './state';
+import { filterNodes, Node, nodes } from './nodes';
 import { parseFile } from './usfx-parser';
 
-let output: State;
+let output: Node;
 
-const books = (): TagNode[] => filterNodes(output.syntaxTree, nodes.book);
+const books = (): Node[] => filterNodes(output, nodes.book);
 
-const chaptersForBook = (book: TagNode): TagNode[] =>
-  filterNodes(book, nodes.c);
+const chaptersForBook = (book: Node): Node[] => filterNodes(book, nodes.c);
 
-const versesForChapter = (chapter: TagNode): TagNode[] =>
+const versesForChapter = (chapter: Node): Node[] =>
   filterNodes(chapter, nodes.v);
 
 // The output file is large and takes a while to load, so it's just created once
@@ -23,9 +22,7 @@ test.before('create output', () => {
 
 test('parseFile creates a state object from a USFX file', t => {
   t.is(typeof output, 'object');
-  t.truthy(output.path);
-  t.truthy(output.syntaxTree);
-  t.truthy(output.unknownTags);
+  t.is(output.type, 'root');
 });
 
 test('has the correct number of books', t => {

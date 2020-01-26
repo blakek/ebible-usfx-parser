@@ -5,5 +5,5 @@ const inputFile = './data/eng-kjv2006_usfx/eng-kjv2006_usfx.xml';
 const outputFile = './data/output.txt';
 
 parseFile(inputFile)
-  .then(JSON.stringify)
+  .then(output => JSON.stringify(output, null, 2))
   .then(syntaxTree => fs.writeFile(outputFile, syntaxTree));

@@ -1,43 +1,16 @@
 import { set } from 'dot-prop';
-import { Node } from 'unist';
-import { inspect } from 'util';
+import { Node, nodes } from './nodes';
 
-export interface TagNode extends Node {
-  type: string;
-  attributes?: object;
-  children?: TagNode[];
-  name?: string;
-  value?: string;
+enum TextActions {
+  CreateNode,
+  Ignore,
+  SetLanguageCode
 }
-
-export const knownTags = [
-  'add',
-  'b',
-  'book',
-  'c',
-  'd',
-  'f',
-  'fr',
-  'ft',
-  'h',
-  'id',
-  'languagecode',
-  'nd',
-  'p',
-  'q',
-  's',
-  'tl',
-  'toc',
-  'usfx',
-  'v',
-  've',
-  'w',
-  'wj'
-];
 
 export interface State {
   path: string[];
-  syntaxTree: TagNode;
+  syntaxTree: Node;
+  textAction: TextActions;
   unknownTags: Set<string>;
 }
 
@@ -47,58 +20,18 @@ export const state: State = {
     type: 'root',
     children: []
   },
+  textAction: TextActions.CreateNode,
   unknownTags: new Set()
-};
-
-export function dumpState(): string {
-  const output = {
-    path: state.path,
-    syntaxTree: state.syntaxTree,
-    unknownTags: Array.from(state.unknownTags)
-  };
-
-  return JSON.stringify(output, null, 2);
-}
-
-export const filterNodes = (
-  rootNode: TagNode,
-  filterNode: TagNode
-): TagNode[] => selectAll(`[name=${filterNode.name}]`, rootNode);
-
-export const nodes: { [key: string]: TagNode } = {
-  add: { type: 'element', name: 'add' },
-  b: { type: 'element', name: 'b' },
-  book: { type: 'element', name: 'book' },
-  c: { type: 'element', name: 'c' },
-  d: { type: 'element', name: 'd' },
-  f: { type: 'element', name: 'f' },
-  fr: { type: 'element', name: 'fr' },
-  ft: { type: 'element', name: 'ft' },
-  h: { type: 'element', name: 'h' },
-  id: { type: 'element', name: 'id' },
-  languagecode: { type: 'element', name: 'languagecode' },
-  nd: { type: 'element', name: 'nd' },
-  p: { type: 'element', name: 'p' },
-  q: { type: 'element', name: 'q' },
-  s: { type: 'element', name: 's' },
-  text: { type: 'text' },
-  tl: { type: 'element', name: 'tl' },
-  toc: { type: 'element', name: 'toc' },
-  usfx: { type: 'element', name: 'usfx' },
-  v: { type: 'element', name: 'v' },
-  ve: { type: 'element', name: 've' },
-  w: { type: 'element', name: 'w' },
-  wj: { type: 'element', name: 'wj' }
 };
 
 type action = {
   type: string;
   isBeginning?: boolean;
-  attributes?: any;
+  attributes?: { id?: string };
   value?: string;
 };
 
-function addChildToState(child: TagNode): void {
+function addChildToState(child: Node): void {
   set(state.syntaxTree, state.path.join('.'), child);
 }
 
@@ -159,13 +92,28 @@ export function updateState(tag: action): void {
       state.path.push('children', '0');
       break;
 
-    case 'text':
-      if (isWhitespace(tag.value)) break;
+    case 'languagecode':
+      if (tag.isBeginning) {
+        state.textAction = TextActions.SetLanguageCode;
+      } else {
+        state.textAction = TextActions.CreateNode;
+      }
+      break;
 
-      addChildToState({
-        ...nodes.text,
-        value: tag.value
-      });
+    case 'text':
+      // Handle when text should be ignored
+      if (state.textAction === TextActions.Ignore || isWhitespace(tag.value)) {
+        break;
+      }
+
+      // Handle when text should set the language code
+      if (state.textAction === TextActions.SetLanguageCode) {
+        set(state.syntaxTree, 'attributes.languageCode', tag.value);
+        break;
+      }
+
+      // Create a new text node
+      addChildToState({ ...nodes.text, value: tag.value });
       incrementPointer();
       break;
 
@@ -180,7 +128,6 @@ export function updateState(tag: action): void {
     case 'ft':
     case 'h':
     case 'id':
-    case 'languagecode':
     case 'nd':
     case 's':
     case 'toc':

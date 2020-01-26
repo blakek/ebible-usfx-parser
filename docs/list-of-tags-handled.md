@@ -1,4 +1,6 @@
-| tag            | description                                                  |
+# List of Tags Handled
+
+| Tag            | Description                                                  |
 | -------------- | ------------------------------------------------------------ |
 | `add`          | text added later; italicized                                 |
 | `b`            | blank line between stanzas of poetry                         |

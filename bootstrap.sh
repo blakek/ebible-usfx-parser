@@ -5,6 +5,8 @@ set -eu -o pipefail
 declare -r __dirname="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 main() {
+  yarn
+
   local output="${__dirname}/data"
 
   if [ ! -d "$output" ]; then

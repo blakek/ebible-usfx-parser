@@ -9,7 +9,8 @@ module.exports = {
     {
       files: ['*.js'],
       rules: {
-        '@typescript-eslint/explicit-function-return-type': ['off']
+        '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/no-useless-constructor': 'error'
       }
     }
   ],
@@ -23,6 +24,7 @@ module.exports = {
     'no-restricted-syntax': ['error'],
     'no-unused-labels': 'error',
     'no-useless-concat': 'error',
+    'no-useless-constructor': 'off',
     radix: ['error', 'as-needed'],
     'require-yield': 'error',
     'sort-keys': 'off'

@@ -81,7 +81,7 @@ import stream = require('stream');
 export function createStream(strict?: boolean, opt?: SAXOptions): SAXStream;
 export class SAXStream extends stream.Duplex {
   constructor(strict?: boolean, opt?: SAXOptions);
-  _parser: SAXParser;
+  public _parser: SAXParser;
   on(event: 'text', listener: (this: this, text: string) => void): this;
   on(event: 'doctype', listener: (this: this, doctype: string) => void): this;
   on(
@@ -104,7 +104,7 @@ export class SAXStream extends stream.Duplex {
       | 'closecdata'
       | 'end'
       | 'ready'
-      | 'close'
+      | 'public'
       | 'readable'
       | 'drain'
       | 'finish',

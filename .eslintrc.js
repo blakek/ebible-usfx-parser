@@ -19,6 +19,9 @@ module.exports = {
   rules: {
     'array-callback-return': 'error',
     camelcase: 'off',
+    // Duplicate class members gives a false result when documenting overloaded
+    // methods
+    'no-dupe-class-members': 'off',
     'no-extra-label': 'error',
     'no-native-reassign': 'error',
     'no-restricted-syntax': ['error'],

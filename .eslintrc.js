@@ -9,7 +9,8 @@ module.exports = {
     {
       files: ['*.js'],
       rules: {
-        '@typescript-eslint/explicit-function-return-type': ['off']
+        '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/no-useless-constructor': 'error'
       }
     }
   ],
@@ -18,11 +19,15 @@ module.exports = {
   rules: {
     'array-callback-return': 'error',
     camelcase: 'off',
+    // Duplicate class members gives a false result when documenting overloaded
+    // methods
+    'no-dupe-class-members': 'off',
     'no-extra-label': 'error',
     'no-native-reassign': 'error',
     'no-restricted-syntax': ['error'],
     'no-unused-labels': 'error',
     'no-useless-concat': 'error',
+    'no-useless-constructor': 'off',
     radix: ['error', 'as-needed'],
     'require-yield': 'error',
     'sort-keys': 'off'

@@ -18,6 +18,19 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@blakek/curry@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@blakek/curry/-/curry-2.0.2.tgz#979e927bcf5fa0426d2af681d7131df5791d1cd4"
+  integrity sha512-B/KkDnZqm9Y92LwETU80BaxbQ61bYTR2GaAY41mKisaICwBoC8lcuw7lwQLl52InMhviCTJBO39GJOA8d+BrVw==
+
+"@blakek/deep@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@blakek/deep/-/deep-2.2.0.tgz#eb97488e4a0943df4da09ad50efba4a98789f5e5"
+  integrity sha512-aRq/qF1yrlhCWNk2tI4epXNpo+cA8/MrxsR5oIkpKKNYtYOQKjAxRMbgnhASPx+b328MkDN+T706yFKJg8VZkQ==
+  dependencies:
+    "@blakek/curry" "^2.0.2"
+    pathington "^1.1.7"
+
 "@concordance/react@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@concordance/react/-/react-2.0.0.tgz#aef913f27474c53731f4fd79cc2f54897de90fde"
@@ -2351,6 +2364,11 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
+
+pathington@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/pathington/-/pathington-1.1.7.tgz#caf2d2db899a31fea4e81e3657af6acde5171903"
+  integrity sha512-JxzhUzagDfNIOm4qqwQqP3rWeo7rNNOfIahy4n+3GTEdwXLqw5cJHUR0soSopQtNEv763lzxb6eA2xBllpR8zw==
 
 picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.0.7, picomatch@^2.2.1:
   version "2.2.1"

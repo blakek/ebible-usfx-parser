@@ -1,4 +1,4 @@
-import { set } from 'dot-prop';
+import { set } from '@blakek/deep';
 import { Node, nodes } from './nodes';
 
 enum TextActions {
@@ -32,7 +32,7 @@ type Action = {
 };
 
 function addChildToState(child: Node): void {
-  set(state.syntaxTree, state.path.join('.'), child);
+  set(child, state.path, state.syntaxTree);
 }
 
 function incrementPointer(): void {
@@ -105,7 +105,7 @@ export function updateState(action: Action): void {
 
       // Handle when text should set the language code
       if (state.textAction === TextActions.SetLanguageCode) {
-        set(state.syntaxTree, 'attributes.languageCode', action.value);
+        set(action.value, 'attributes.languageCode', state.syntaxTree);
         break;
       }
 

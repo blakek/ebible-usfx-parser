@@ -42,6 +42,7 @@
     "test": "ava"
   },
   "dependencies": {
+    "@blakek/deep": "^2.2.0",
     "@types/node": "^13.1.8",
     "@types/unist": "^2.0.3",
     "dot-prop": "^5.2.0",

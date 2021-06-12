@@ -40,9 +40,6 @@ function incrementPointer(): void {
   state.path[state.path.length - 1] = (lastElement + 1).toString();
 }
 
-const whitespaceRegExp = /^\s+$/;
-const isWhitespace = (value: string): boolean => whitespaceRegExp.test(value);
-
 export function updateState(action: Action): void {
   switch (action.type) {
     case 'add':
@@ -102,10 +99,7 @@ export function updateState(action: Action): void {
 
     case 'text':
       // Handle when text should be ignored
-      if (
-        state.textAction === TextActions.Ignore ||
-        isWhitespace(action.value)
-      ) {
+      if (state.textAction === TextActions.Ignore) {
         break;
       }
 
@@ -126,15 +120,25 @@ export function updateState(action: Action): void {
       incrementPointer();
       break;
 
+    // Ignore these tags and their text content
     case 'f':
     case 'fr':
     case 'ft':
     case 'h':
     case 'id':
-    case 'nd':
     case 's':
-    case 'toc':
     case 'tl':
+    case 'toc':
+      if (action.isTagOpen) {
+        state.textAction = TextActions.Ignore;
+      } else {
+        state.textAction = TextActions.CreateNode;
+      }
+
+      break;
+
+    // Ignore these tags, but not their contents
+    case 'nd':
     case 'usfx':
       break;
 

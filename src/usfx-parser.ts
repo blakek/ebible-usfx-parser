@@ -6,7 +6,11 @@ import { state, updateState } from './state';
 export function parseFile(inputFile: fs.PathLike): Promise<Node> {
   return new Promise((resolve, reject) => {
     const input = fs.createReadStream(inputFile);
-    const xmlParser = sax.createStream(false, { lowercase: true });
+    const xmlParser = sax.createStream(false, {
+      lowercase: true,
+      normalize: true,
+      trim: false
+    });
 
     xmlParser.on('error', reject);
 

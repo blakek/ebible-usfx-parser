@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as sax from 'sax';
-import { Node } from './nodes';
+import { Node, USFXKnownTag } from './nodes';
 import { state, updateState } from './state';
 
 export function parseFile(inputFile: fs.PathLike): Promise<Node> {
@@ -16,7 +16,7 @@ export function parseFile(inputFile: fs.PathLike): Promise<Node> {
 
     xmlParser.on('opentag', tag => {
       updateState({
-        type: tag.name,
+        type: tag.name as USFXKnownTag,
         attributes: tag.attributes,
         isTagOpen: true
       });
@@ -25,7 +25,7 @@ export function parseFile(inputFile: fs.PathLike): Promise<Node> {
     xmlParser.on('closetag', tagName => {
       if (xmlParser._parser.tag.isSelfClosing) return;
 
-      updateState({ type: tagName, isTagOpen: false });
+      updateState({ type: tagName as USFXKnownTag, isTagOpen: false });
     });
 
     xmlParser.on('text', text => {

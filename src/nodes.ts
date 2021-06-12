@@ -18,12 +18,25 @@ export enum USFXNodeType {
   c = 'chapter',
   d = 'psalmTitle',
   languagecode = 'languageCode',
-  nd = 'unknown_nd',
+  nd = 'godsName',
   p = 'paragraph',
   q = 'poetryStanza',
   text = 'text',
   usfx = 'root',
   v = 'verse',
   w = 'wordAttributes',
-  wj = 'wordsOfJesus'
+  wj = 'wordsOfJesus',
+
+  // unused values
+  f = 'unused_footnote',
+  fr = 'unused_footnoteReference',
+  ft = 'unused_footnoteText',
+  h = 'unused_shortTitle',
+  id = 'unused_bookID',
+  s = 'unused_sectionHeading',
+  tl = 'unused_unknown',
+  toc = 'unused_tableOfContents',
+  ve = 'unused_verseEnding'
 }
+
+export type USFXKnownTag = keyof typeof USFXNodeType;

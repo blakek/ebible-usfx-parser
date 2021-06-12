@@ -1,5 +1,5 @@
 import { set } from '@blakek/deep';
-import { Node, USFXNodeType } from './nodes';
+import { Node, USFXKnownTag, USFXNodeType } from './nodes';
 
 enum TextActions {
   CreateNode,
@@ -25,7 +25,7 @@ export const state: State = {
 };
 
 type Action = {
-  type: string;
+  type: USFXKnownTag;
   isTagOpen?: boolean;
   attributes?: { id?: string };
   value?: string;
@@ -76,8 +76,8 @@ function addChildToState(
 export function updateState(action: Action): void {
   switch (action.type) {
     case 'add':
-    case 'book':
     case 'd':
+    case 'nd':
     case 'p':
     case 'q':
     case 'v':
@@ -85,22 +85,26 @@ export function updateState(action: Action): void {
     case 'wj':
       if (action.isTagOpen) {
         addChildToState(USFXNodeType[action.type], action.attributes, []);
-        break;
+      } else {
+        stateNextSibling();
       }
 
-      // HACK: clean up path since chapters don't have an ending tag.
-      if (action.type === 'book') {
-        state.path.splice(2);
-        stateNextChild();
-        break;
-      }
-
-      stateNextSibling();
       break;
 
     case 'b':
       addChildToState(USFXNodeType.b);
       stateNextChild();
+      break;
+
+    case 'book':
+      if (action.isTagOpen) {
+        addChildToState(USFXNodeType[action.type], action.attributes, []);
+      } else {
+        // HACK: clean up path since chapters don't have an ending tag.
+        state.path.splice(2);
+        stateNextChild();
+      }
+
       break;
 
     case 'c':
@@ -160,7 +164,6 @@ export function updateState(action: Action): void {
       break;
 
     // Ignore these tags, but not their contents
-    case 'nd':
     case 'usfx':
       break;
 

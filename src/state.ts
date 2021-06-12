@@ -1,5 +1,5 @@
 import { set } from '@blakek/deep';
-import { Node, nodes } from './nodes';
+import { Node, USFXNodeType } from './nodes';
 
 enum TextActions {
   CreateNode,
@@ -31,13 +31,46 @@ type Action = {
   value?: string;
 };
 
-function addChildToState(child: Node): void {
-  set(child, state.path, state.syntaxTree);
+function stateStartChildren(): void {
+  state.path.push('children', '0');
 }
 
-function incrementPointer(): void {
+function stateEndChildren(): void {
+  state.path.splice(state.path.length - 2);
+}
+
+function stateNextChild(): void {
   const lastElement = parseInt(state.path[state.path.length - 1]);
   state.path[state.path.length - 1] = (lastElement + 1).toString();
+}
+
+function stateNextSibling(): void {
+  // Does the current node have children?
+  const currentHasChildren = state.path.slice(-2, -1)[0] === 'children';
+
+  if (currentHasChildren) {
+    stateEndChildren();
+  }
+
+  stateNextChild();
+}
+
+function addChildToState(
+  nodeType: USFXNodeType,
+  props?: Record<string, unknown>,
+  children?: unknown[]
+): void {
+  const newNode = {
+    type: nodeType,
+    ...props,
+    ...(children && { children })
+  };
+
+  set(newNode, state.path, state.syntaxTree);
+
+  if (children !== undefined) {
+    stateStartChildren();
+  }
 }
 
 export function updateState(action: Action): void {
@@ -51,42 +84,32 @@ export function updateState(action: Action): void {
     case 'w':
     case 'wj':
       if (action.isTagOpen) {
-        addChildToState({
-          ...nodes[action.type],
-          ...(action.attributes && { attributes: action.attributes }),
-          children: []
-        });
-        state.path.push('children', '0');
-      } else {
-        // HACK: clean up path since chapters don't have an ending tag.
-        if (action.type === 'book') {
-          state.path.splice(2);
-          incrementPointer();
-        } else {
-          state.path.splice(state.path.length - 2);
-          incrementPointer();
-        }
+        addChildToState(USFXNodeType[action.type], action.attributes, []);
+        break;
       }
+
+      // HACK: clean up path since chapters don't have an ending tag.
+      if (action.type === 'book') {
+        state.path.splice(2);
+        stateNextChild();
+        break;
+      }
+
+      stateNextSibling();
       break;
 
     case 'b':
-      addChildToState(nodes.b);
-      incrementPointer();
+      addChildToState(USFXNodeType.b);
+      stateNextChild();
       break;
 
     case 'c':
       // HACK: clean up path since chapters don't have an ending tag.
       if (action.attributes.id !== '1') {
-        state.path.splice(state.path.length - 2);
-        incrementPointer();
+        stateNextSibling();
       }
 
-      addChildToState({
-        ...nodes[action.type],
-        ...(action.attributes && { attributes: action.attributes }),
-        children: []
-      });
-      state.path.push('children', '0');
+      addChildToState(USFXNodeType.c, action.attributes, []);
       break;
 
     case 'languagecode':
@@ -110,14 +133,13 @@ export function updateState(action: Action): void {
       }
 
       // Create a new text node
-      addChildToState({ ...nodes.text, value: action.value });
-      incrementPointer();
+      addChildToState(USFXNodeType.text, { value: action.value });
+      stateNextChild();
       break;
 
     case 've':
       // Verse ends should close the verse object
-      state.path.splice(state.path.length - 2);
-      incrementPointer();
+      stateNextSibling();
       break;
 
     // Ignore these tags and their text content

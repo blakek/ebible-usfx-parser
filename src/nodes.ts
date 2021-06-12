@@ -8,31 +8,22 @@ export interface Node extends unist.Node {
   value?: string;
 }
 
-export const filterNodes = (rootNode: Node, filterNode: Node): Node[] =>
-  selectAll(filterNode.type, rootNode);
+export const filterNodes = (rootNode: Node, nodeType: USFXNodeType): Node[] =>
+  selectAll(nodeType, rootNode);
 
-export const nodes: Record<string, Node> = {
-  add: { type: 'addedText' },
-  b: { type: 'blankLine' },
-  book: { type: 'book' },
-  c: { type: 'chapter' },
-  d: { type: 'psalmTitle' },
-  f: { type: 'footnote' },
-  fr: { type: 'unknown_fr' },
-  ft: { type: 'unknown_ft' },
-  h: { type: 'shortBookName' },
-  id: { type: 'bookIdentifier' },
-  languagecode: { type: 'languageCode' },
-  nd: { type: 'unknown_nd' },
-  p: { type: 'paragraph' },
-  q: { type: 'poetryStanza' },
-  s: { type: 'sectionHeading' },
-  text: { type: 'text' },
-  tl: { type: 'unknown_tl' },
-  toc: { type: 'tableOfContents' },
-  usfx: { type: 'root' },
-  v: { type: 'verse' },
-  ve: { type: 'unused_verseEnding' },
-  w: { type: 'wordAttributes' },
-  wj: { type: 'wordsOfJesus' }
-};
+export enum USFXNodeType {
+  add = 'addedText',
+  b = 'blankLine',
+  book = 'book',
+  c = 'chapter',
+  d = 'psalmTitle',
+  languagecode = 'languageCode',
+  nd = 'unknown_nd',
+  p = 'paragraph',
+  q = 'poetryStanza',
+  text = 'text',
+  usfx = 'root',
+  v = 'verse',
+  w = 'wordAttributes',
+  wj = 'wordsOfJesus'
+}

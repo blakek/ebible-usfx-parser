@@ -1,23 +1,23 @@
 import test from 'ava';
 import { bookVerseCount } from './book-meta';
-import { filterNodes, Node, nodes } from './nodes';
+import { filterNodes, Node, USFXNodeType } from './nodes';
 import { parseFile } from './usfx-parser';
 
 let output: Node;
 
-const books = (): Node[] => filterNodes(output, nodes.book);
+const books = (): Node[] => filterNodes(output, USFXNodeType.book);
 
-const chaptersForBook = (book: Node): Node[] => filterNodes(book, nodes.c);
+const chaptersForBook = (book: Node): Node[] =>
+  filterNodes(book, USFXNodeType.c);
 
 const versesForChapter = (chapter: Node): Node[] =>
-  filterNodes(chapter, nodes.v);
+  filterNodes(chapter, USFXNodeType.v);
 
 // The output file is large and takes a while to load, so it's just created once
 // for the tests.
-test.before('create output', () => {
-  return parseFile('./data/eng-kjv2006_usfx/eng-kjv2006_usfx.xml').then(obj => {
-    output = obj;
-  });
+test.before('create output', async () => {
+  const obj = await parseFile('./data/eng-kjv2006_usfx/eng-kjv2006_usfx.xml');
+  output = obj;
 });
 
 test('parseFile creates a state object from a USFX file', t => {

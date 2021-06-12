@@ -1,4 +1,11 @@
-# List of Tags Handled
+# USFX Information
+
+## Notes
+
+Read more about USFX [here](https://ebible.org/usfx).
+The schema is documented [here](https://ebible.org/usfx/usfx.htm).
+
+## Handled Tags
 
 | Tag            | Description                                                  |
 | -------------- | ------------------------------------------------------------ |
@@ -8,8 +15,8 @@
 | `c`            | chapter starting point with `id` for chapter number          |
 | `d`            | Hebrew title of a Psalm                                      |
 | `f`            | footnote                                                     |
-| `fr`           | unknown; in footnotes                                        |
-| `ft`           | unknown; in footnotes                                        |
+| `fr`           | footnote > reference                                         |
+| `ft`           | footnote > text                                              |
 | `h`            | short book name                                              |
 | `id`           | book identifier; `id` **must** be 3-letter identifier        |
 | `languagecode` | Three-letter Ethnologue code or two-letter ISO language code |

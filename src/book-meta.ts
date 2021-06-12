@@ -1,6 +1,4 @@
-type BookChapter = [string, number[]];
-
-export const bookVerseCount: BookChapter[] = [
+export const bookVerseCount = [
   [
     'GEN',
     [
@@ -1074,4 +1072,4 @@ export const bookVerseCount: BookChapter[] = [
       21
     ]
   ]
-];
+] as const;
